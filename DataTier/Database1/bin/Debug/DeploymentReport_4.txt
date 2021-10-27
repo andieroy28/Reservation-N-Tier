@@ -1,0 +1,22 @@
+﻿** Highlights
+     Tables that will be rebuilt
+       None
+     Clustered indexes that will be dropped
+       None
+     Clustered indexes that will be created
+       None
+     Possible data issues
+       None
+
+** User actions
+     Create
+       [dbo].[tblContact] (Table)
+       [dbo].[tblReservation] (Table)
+       Foreign Key: unnamed constraint on [dbo].[tblContact] (Foreign Key)
+       [dbo].[spAddContact] (Procedure)
+       [dbo].[spDeleteContact] (Procedure)
+       [dbo].[spGetContact] (Procedure)
+       [dbo].[spGetReservations] (Procedure)
+       [dbo].[spUpdateContact] (Procedure)
+
+** Supporting actions
