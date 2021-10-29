@@ -3,6 +3,7 @@ D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\bin\Debug\ReservationDat
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\bin\Debug\ReservationData.pdb
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\ReservationData.dll
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\ReservationData.pdb
+D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\ReservationData.sqlproj.AssemblyReference.cache
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\Model.xml
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\refactor.xml
 D:\andrea\ISUCORP\Reservation-N-Tier\DataTier\Database1\obj\Debug\postdeploy.sql

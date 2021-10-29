@@ -71,6 +71,7 @@
     <Build Include="Stored Procedures\spAddContact.sql" />
     <Build Include="Stored Procedures\spUpdateContact.sql" />
     <Build Include="Stored Procedures\spDeleteContact.sql" />
+    <Build Include="Tables\tblContactType.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\scriptReservation.sql" />

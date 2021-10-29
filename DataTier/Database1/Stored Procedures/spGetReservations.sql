@@ -1,14 +1,17 @@
 ﻿CREATE PROCEDURE [dbo].[spGetReservations]	
 AS
 	SELECT 
-		tblReservation.ID as ReservationId, 
+		tblReservation.Id as ReservationId, 
 		tblReservation.Description, 
 		tblContact.Id, 
 		tblContact.Name,
 		tblContact.Birthdate,
-		tblContact.PhoneNumber
+		tblContact.PhoneNumber,
+		tblContactType.Id as ContactTypeId,
+		tblContactType.Name as ContactType
 	FROM tblReservation
 	LEFT JOIN tblContact ON tblReservation.Id = tblContact.ReservationId
+	LEFT JOIN tblContactType ON tblContactType.Id = tblContact.ContactTypeId
 	ORDER BY tblReservation.Description
 RETURN 0
 

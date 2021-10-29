@@ -3,9 +3,13 @@
 	@PhoneNumber NVARCHAR(15), 
 	@Birthdate date, 
 	@ReservationId int, 
-	@Description NVARCHAR(max)
+	@ContactTypeId int, 
+	@Description NVARCHAR(max),
+	@Id INT OUTPUT
 AS
-	INSERT INTO tblContact (Name, PhoneNumber, Birthdate, ReservationId) 
-	VALUES (@Name, @PhoneNumber, @Birthdate, @ReservationId)
+Begin
+	INSERT INTO tblContact ([Name], PhoneNumber, Birthdate, ReservationId, ContactTypeId) 
+	VALUES (@Name, @PhoneNumber, @Birthdate, @ReservationId, @ContactTypeId)
+	SET @Id = SCOPE_IDENTITY()
 	UPDATE tblReservation SET Description = @Description WHERE Id = @ReservationId
-RETURN 0
+End

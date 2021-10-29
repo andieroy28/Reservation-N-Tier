@@ -1,0 +1,141 @@
+<div class="bg-light">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-3"><h3 class="display-6 header-title-1">Reservation List</h3></div>
+            <div class="col-md-6">
+                <p><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </small></p>
+            </div>
+            <div class="col-md-2">
+                <a href="/create" class="btn btn-secondary my-2">Create Reservation</a>         
+            </div>
+        </div>      
+    </div>
+  </div>
+
+  <div class="container  bg-white ">
+    <div class="row py-4">
+        <div class="col-md-8">
+
+                <input class="form-control" list="sortlistOptions" id="sortDataList" placeholder="Sort By">
+                <datalist id="sortlistOptions">
+                    <option value="Name">
+                    <option value="Modify">
+                </datalist>
+        </div>
+    </div>
+    <div class="row py-4">
+        <div class="col-md-12" *ngFor="let row of service.list">
+            <div class="placeholder row bg-light p-2 m-2">
+                <div class="col-md-2"><img src="/assets/img/pic.jpg" /></div>
+                <div class="col-md-2"><span>{{row.description}}</span> <br><span>{{row.birthDate}}</span></div>
+                <div class="col-md-2"><span>Rating</span><br>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                </div>
+                <div class="col-md-2">
+                    <span>Add Favorites</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary btn-sm m-2">EDIT</button> 
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="onDelete(row.id)">DELETE</button>
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="row py-4">
+        <div class="col-md-8">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+        </div>
+        
+    </div>
+  </div>
+  
+
+<!-- 
+<div class="list row">
+    <div class="col-md-8">
+      <div class="input-group mb-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name"
+          [(ngModel)]="name"
+        />
+        <div class="input-group-append">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="searchByName()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h4>Reservation List</h4>
+      <ul class="list-group">
+        <li
+          class="list-group-item"
+          *ngFor="let reservation of reservations; let i = index"
+          [class.active]="i == currentIndex"
+          (click)="setCurrentReservation(reservation, i)"
+        >
+  
+        </li>
+      </ul>
+  
+      <button class="m-4 btn btn-sm btn-danger" (click)="deleteAllReservation()">
+        Delete All
+      </button>
+    </div>
+    <div class="col-md-6">
+      <div *ngIf="currentReservation">
+        <h4>Reservation</h4>
+        <div>
+          <label><strong>Name:</strong></label> 
+        </div>
+        <div>
+          <label><strong>Description:</strong></label>
+  
+        </div>
+        <div>
+          <label><strong>Status:</strong></label>
+  
+        </div>
+  
+        <a class="badge badge-warning" routerLink="/reservations/">
+          Edit
+        </a>
+      </div>
+  
+      <div *ngIf="!currentReservation">
+        <br />
+        <p>Please click on a reservation</p>
+      </div>
+    </div>
+  </div> -->

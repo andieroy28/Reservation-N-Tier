@@ -1,0 +1,16 @@
+.custom-header {
+  background-image: url("/assets/img/header.jpg");
+  background-color: #29211e;
+  background-position: center;
+  background-repeat:no-repeat;
+  color: #fff;
+  height:200px;
+}
+
+.header-brand-logo{
+    font-size:36px;
+}
+
+
+
+

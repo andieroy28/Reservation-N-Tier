@@ -105,13 +105,34 @@
 			</Relationship>
 			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="5" />
 		</Element>
+		<Element Type="SqlPrimaryKeyConstraint">
+			<Relationship Name="ColumnSpecifications">
+				<Entry>
+					<Element Type="SqlIndexedColumnSpecification">
+						<Relationship Name="Column">
+							<Entry>
+								<References Name="[dbo].[tblContactType].[Id]" />
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="DefiningTable">
+				<Entry>
+					<References Name="[dbo].[tblContactType]" />
+				</Entry>
+			</Relationship>
+			<Annotation Type="SqlInlineConstraintAnnotation" Disambiguator="6" />
+		</Element>
 		<Element Type="SqlProcedure" Name="[dbo].[spAddContact]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
-	INSERT INTO tblContact (Name, PhoneNumber, Birthdate, ReservationId) 
-	VALUES (@Name, @PhoneNumber, @Birthdate, @ReservationId)
+Begin
+	INSERT INTO tblContact ([Name], PhoneNumber, Birthdate, ReservationId, ContactTypeId) 
+	VALUES (@Name, @PhoneNumber, @Birthdate, @ReservationId, @ContactTypeId)
+	SET @Id = SCOPE_IDENTITY()
 	UPDATE tblReservation SET Description = @Description WHERE Id = @ReservationId
-RETURN 0]]></Value>
+End]]></Value>
 			</Property>
 			<Property Name="IsAnsiNullsOn" Value="True" />
 			<Relationship Name="BodyDependencies">
@@ -131,6 +152,9 @@ RETURN 0]]></Value>
 					<References Name="[dbo].[tblContact].[ReservationId]" />
 				</Entry>
 				<Entry>
+					<References Name="[dbo].[tblContact].[ContactTypeId]" />
+				</Entry>
+				<Entry>
 					<References Name="[dbo].[spAddContact].[@Name]" />
 				</Entry>
 				<Entry>
@@ -141,6 +165,12 @@ RETURN 0]]></Value>
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[spAddContact].[@ReservationId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[spAddContact].[@ContactTypeId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[spAddContact].[@Id]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[tblReservation]" />
@@ -219,6 +249,21 @@ RETURN 0]]></Value>
 					</Element>
 				</Entry>
 				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[spAddContact].[@ContactTypeId]">
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+				<Entry>
 					<Element Type="SqlSubroutineParameter" Name="[dbo].[spAddContact].[@Description]">
 						<Relationship Name="Type">
 							<Entry>
@@ -234,6 +279,22 @@ RETURN 0]]></Value>
 						</Relationship>
 					</Element>
 				</Entry>
+				<Entry>
+					<Element Type="SqlSubroutineParameter" Name="[dbo].[spAddContact].[@Id]">
+						<Property Name="IsOutput" Value="True" />
+						<Relationship Name="Type">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
@@ -241,10 +302,10 @@ RETURN 0]]></Value>
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="388" />
+				<Property Name="Length" Value="493" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
-				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[spAddContact]&#xD;&#xA;&#x9;@Name NVARCHAR(50), &#xD;&#xA;&#x9;@PhoneNumber NVARCHAR(15), &#xD;&#xA;&#x9;@Birthdate date, &#xD;&#xA;&#x9;@ReservationId int, &#xD;&#xA;&#x9;@Description NVARCHAR(max)&#xD;&#xA;AS" />
+				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[spAddContact]&#xD;&#xA;&#x9;@Name NVARCHAR(50), &#xD;&#xA;&#x9;@PhoneNumber NVARCHAR(15), &#xD;&#xA;&#x9;@Birthdate date, &#xD;&#xA;&#x9;@ReservationId int, &#xD;&#xA;&#x9;@ContactTypeId int, &#xD;&#xA;&#x9;@Description NVARCHAR(max),&#xD;&#xA;&#x9;@Id INT OUTPUT&#xD;&#xA;AS" />
 			</Annotation>
 		</Element>
 		<Element Type="SqlProcedure" Name="[dbo].[spDeleteContact]">
@@ -303,9 +364,12 @@ RETURN 0]]></Value>
 		tblContact.Id, 
 		tblContact.Name,
 		tblContact.Birthdate,
-		tblContact.PhoneNumber
-	FROM tblReservation 
+		tblContact.PhoneNumber,
+		tblContactType.Id as ContactTypeId,
+		tblContactType.Name as ContactType
+	FROM tblReservation
 	LEFT JOIN tblContact ON tblReservation.Id = tblContact.ReservationId
+	LEFT JOIN tblContactType ON tblContactType.Id = tblContact.ContactTypeId
 	Where tblContact.Id = @Id
 RETURN 0]]></Value>
 			</Property>
@@ -324,6 +388,15 @@ RETURN 0]]></Value>
 					<References Name="[dbo].[tblContact].[ReservationId]" />
 				</Entry>
 				<Entry>
+					<References Name="[dbo].[tblContactType]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContact].[ContactTypeId]" />
+				</Entry>
+				<Entry>
 					<References Name="[dbo].[tblReservation].[Id]" />
 				</Entry>
 				<Entry>
@@ -340,6 +413,12 @@ RETURN 0]]></Value>
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[tblContact].[PhoneNumber]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Name]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[spGetContact].[@Id]" />
@@ -368,7 +447,7 @@ RETURN 0]]></Value>
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="355" />
+				<Property Name="Length" Value="507" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
 				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[spGetContact]&#xD;&#xA;&#x9;@Id int&#xD;&#xA;AS" />
@@ -378,14 +457,17 @@ RETURN 0]]></Value>
 			<Property Name="BodyScript">
 				<Value><![CDATA[
 	SELECT 
-		tblReservation.ID as ReservationId, 
+		tblReservation.Id as ReservationId, 
 		tblReservation.Description, 
 		tblContact.Id, 
 		tblContact.Name,
 		tblContact.Birthdate,
-		tblContact.PhoneNumber
+		tblContact.PhoneNumber,
+		tblContactType.Id as ContactTypeId,
+		tblContactType.Name as ContactType
 	FROM tblReservation
 	LEFT JOIN tblContact ON tblReservation.Id = tblContact.ReservationId
+	LEFT JOIN tblContactType ON tblContactType.Id = tblContact.ContactTypeId
 	ORDER BY tblReservation.Description
 RETURN 0]]></Value>
 			</Property>
@@ -402,6 +484,15 @@ RETURN 0]]></Value>
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[tblContact].[ReservationId]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContact].[ContactTypeId]" />
 				</Entry>
 				<Entry>
 					<References Name="[dbo].[tblReservation].[Id]" />
@@ -421,6 +512,12 @@ RETURN 0]]></Value>
 				<Entry>
 					<References Name="[dbo].[tblContact].[PhoneNumber]" />
 				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Id]" />
+				</Entry>
+				<Entry>
+					<References Name="[dbo].[tblContactType].[Name]" />
+				</Entry>
 			</Relationship>
 			<Relationship Name="Schema">
 				<Entry>
@@ -428,7 +525,7 @@ RETURN 0]]></Value>
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="360" />
+				<Property Name="Length" Value="513" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
 				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[spGetReservations]&#x9;&#xD;&#xA;AS" />
@@ -437,7 +534,7 @@ RETURN 0]]></Value>
 		<Element Type="SqlProcedure" Name="[dbo].[spUpdateContact]">
 			<Property Name="BodyScript">
 				<Value><![CDATA[
-	UPDATE tblContact SET Name = @Name, PhoneNumber= @PhoneNumber, Birthdate = @Birthdate WHERE Id = @Id
+	UPDATE tblContact SET [Name] = @Name, PhoneNumber= @PhoneNumber, Birthdate = @Birthdate WHERE Id = @Id
 	UPDATE tblReservation SET Description = @Description WHERE Id = @ReservationId
 RETURN 0]]></Value>
 			</Property>
@@ -587,7 +684,7 @@ RETURN 0]]></Value>
 				</Entry>
 			</Relationship>
 			<Annotation Type="SysCommentsObjectAnnotation">
-				<Property Name="Length" Value="375" />
+				<Property Name="Length" Value="377" />
 				<Property Name="StartLine" Value="1" />
 				<Property Name="StartColumn" Value="1" />
 				<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[spUpdateContact]&#xD;&#xA;&#x9;@Id int, &#xD;&#xA;&#x9;@Name NVARCHAR(50), &#xD;&#xA;&#x9;@PhoneNumber NVARCHAR(15), &#xD;&#xA;&#x9;@Birthdate date, &#xD;&#xA;&#x9;@ReservationId int, &#xD;&#xA;&#x9;@Description NVARCHAR(max)&#xD;&#xA;AS" />
@@ -677,6 +774,65 @@ RETURN 0]]></Value>
 							</Entry>
 						</Relationship>
 						<AttachedAnnotation Disambiguator="3" />
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[tblContact].[ContactTypeId]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+					</Element>
+				</Entry>
+			</Relationship>
+			<Relationship Name="Schema">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[dbo]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlTable" Name="[dbo].[tblContactType]">
+			<Property Name="IsAnsiNullsOn" Value="True" />
+			<Relationship Name="Columns">
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[tblContactType].[Id]">
+						<Property Name="IsNullable" Value="False" />
+						<Property Name="IsIdentity" Value="True" />
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[int]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
+						<AttachedAnnotation Disambiguator="6" />
+					</Element>
+				</Entry>
+				<Entry>
+					<Element Type="SqlSimpleColumn" Name="[dbo].[tblContactType].[Name]">
+						<Relationship Name="TypeSpecifier">
+							<Entry>
+								<Element Type="SqlTypeSpecifier">
+									<Property Name="Length" Value="50" />
+									<Relationship Name="Type">
+										<Entry>
+											<References ExternalSource="BuiltIns" Name="[nvarchar]" />
+										</Entry>
+									</Relationship>
+								</Element>
+							</Entry>
+						</Relationship>
 					</Element>
 				</Entry>
 			</Relationship>
